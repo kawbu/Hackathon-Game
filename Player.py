@@ -4,6 +4,7 @@ class Player:
 
     def __init__(self, x = 400, y = 455, width = 40, height = 60, move = 5, jumping = False, distance = 8, jumpCount = 8):
         #Player Details
+        self.health = 2
         self.dead = False
         self.x = x
         self.y = y

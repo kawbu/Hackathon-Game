@@ -52,10 +52,11 @@ class Enemy:
         self.x = respawn_pos
 
     #Enemy resets when hit and turns player icon red indicating a hit
-    def enemy_on_hit(self, playerRect):
+    def enemy_on_hit(self, playerRect, playerObj):
         collide = playerRect.collidepoint(self.rect.center)
         if collide:
             self.respawn()
+            playerObj.health -= 1
             return (255, 0, 0)
         return (255, 255, 255)
     
@@ -71,7 +72,7 @@ class Enemy:
     def jump_on_random(self):
         temp_int = random.randint(0, 60)
 
-        if temp_int == 3:
+        if temp_int == self.speed:
             self.jumping = True
         if self.jumping:
             if self.jumpCount >= -1*self.distance:
