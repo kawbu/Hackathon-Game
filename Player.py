@@ -18,11 +18,14 @@ class Player:
     # Left and Right movement
     def movement(self):
         keys = pygame.key.get_pressed()
+        self.direction: int
 
         if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.x > 0:
             self.x -= self.move
+            self.direction = 0
         if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.x < 800-self.width:
             self.x += self.move 
+            self.direction = 1
         
     # Jumping
     def jump(self):

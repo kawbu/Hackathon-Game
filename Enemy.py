@@ -17,22 +17,32 @@ class Enemy:
         self.distance = 8
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
     
+    #Enemy will always move in the direction of the player.
     def walk_towards_player(self, player_x, player_y):
         if player_x > self.x:
             self.x += self.speed
         else:
             self.x -= self.speed
     
+    #Updates position of enemy rectangle for collision detection
     def updateRect(self):
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
 
+
+    #Enemy resets when hit and turns player icon red indicating a hit
     def enemy_on_hit(self, playerRect):
         collide = playerRect.collidepoint(self.rect.center)
+        temp_int = random.randint(1, 2)
         if collide:
-            self.x = -200
+            if temp_int == 2:
+                self.x = 1000
+            else:
+                self.x = 800
             return (255, 0, 0)
         return (255, 255, 255)
-        
+    
+
+    #Enemy Jumps on Random Intervals
     def jump_on_random(self):
         temp_int = random.randint(0, 60)
 

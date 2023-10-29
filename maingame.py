@@ -5,6 +5,7 @@ from os import listdir
 from os.path import isfile, join
 import Player
 import Enemy
+import shooting
 
 pygame.init()
 
@@ -23,7 +24,7 @@ window = pygame.display.set_mode((screen_w, screen_h))
 player = Player.Player()
 enemy = Enemy.Enemy()
 playerColor = (255, 255, 255)
-    
+
 def draw(self, win):
     win.blit(self.image (self.rect.x, self.rect.y))
 
@@ -64,13 +65,27 @@ def draw_floor():
 
 #Creating the game
 def main(window):
+    pressed = False
     clock = pygame.time.Clock()
-    background, bg_image = set_background("testBG.png")
+    background, bg_image = set_background("testBG2.png")
 
     game = True
     while game:
         clock.tick(fps)
+        draw(window, background, bg_image)
+        keys = pygame.key.get_pressed()
         player_rect = pygame.Rect((player.x, player.y, player.width, player.height))
+        if keys[pygame.K_SPACE]:
+            pressed = True
+            bullet = shooting.Bullet(player.x, player.y, player.direction)
+
+        if pressed:
+            pygame.draw.rect(window, (255, 255, 255), (bullet.x, bullet.y, bullet.width, bullet.height))
+            if bullet.direction == 1 and bullet.x < 900:
+                bullet.x += bullet.move
+            elif bullet.direction == 0 and bullet.x > -50:
+                bullet.x -= bullet.move
+
         #enemy_rect = pygame.Rect((enemy.x, enemy.y, enemy.width, enemy.height))
         enemy.updateRect()
         enemy.jump_on_random()
@@ -78,8 +93,7 @@ def main(window):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game = False
-        
-        draw(window, background, bg_image)
+
         player.movement()
         player.jump()
         enemy.walk_towards_player(player.x, player.y)
