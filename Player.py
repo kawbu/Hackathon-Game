@@ -14,7 +14,7 @@ class Player:
         self.jumping = jumping
         self.distance = distance
         self.jumpCount = jumpCount
-
+    
     # Left and Right movement
     def movement(self):
         keys = pygame.key.get_pressed()

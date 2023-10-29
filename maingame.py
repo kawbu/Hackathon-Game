@@ -67,7 +67,8 @@ def draw_floor():
 def main(window):
     pressed = False
     clock = pygame.time.Clock()
-    background, bg_image = set_background("testBG2.png")
+    background, bg_image = set_background("potentialBG.png")
+    bullet_rect = None
 
     game = True
     while game:
@@ -85,9 +86,12 @@ def main(window):
                 bullet.x += bullet.move
             elif bullet.direction == 0 and bullet.x > -50:
                 bullet.x -= bullet.move
+            bullet_rect = pygame.Rect((bullet.x, bullet.y, bullet.width, bullet.height))
 
         #enemy_rect = pygame.Rect((enemy.x, enemy.y, enemy.width, enemy.height))
         enemy.updateRect()
+        if bullet_rect:
+            bullet.y += enemy.enemy_on_bullet(bullet_rect)
         enemy.jump_on_random()
 
         for event in pygame.event.get():

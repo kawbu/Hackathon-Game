@@ -13,8 +13,8 @@ class Enemy:
         self.height = height
         self.speed = speed
         self.jumping = False
-        self.jumpCount = 8
-        self.distance = 8
+        self.jumpCount = 9
+        self.distance = 9
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
     
     #Enemy will always move in the direction of the player.
@@ -28,19 +28,25 @@ class Enemy:
     def updateRect(self):
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
 
+    def respawn(self):
+        respawn_pos = random.choice([1000, -100, 1100, -200])
+        self.x = respawn_pos
 
     #Enemy resets when hit and turns player icon red indicating a hit
     def enemy_on_hit(self, playerRect):
         collide = playerRect.collidepoint(self.rect.center)
-        temp_int = random.randint(1, 2)
         if collide:
-            if temp_int == 2:
-                self.x = 1000
-            else:
-                self.x = 800
+            self.respawn()
             return (255, 0, 0)
         return (255, 255, 255)
     
+    def enemy_on_bullet(self, bulletRect):
+        collide = bulletRect.collidepoint(self.rect.topleft)
+        if collide:
+            self.respawn()
+            return 1000
+        else:
+            return 0
 
     #Enemy Jumps on Random Intervals
     def jump_on_random(self):
