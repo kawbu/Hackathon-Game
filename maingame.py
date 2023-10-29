@@ -4,6 +4,7 @@ import os
 from os import listdir
 from os.path import isfile, join
 import Player
+import Enemy
 
 pygame.init()
 
@@ -20,6 +21,8 @@ velocity = 5
 window = pygame.display.set_mode((screen_w, screen_h))
 
 player = Player.Player()
+enemy = Enemy.Enemy()
+playerColor = (255, 255, 255)
     
 def draw(self, win):
     win.blit(self.image (self.rect.x, self.rect.y))
@@ -67,6 +70,9 @@ def main(window):
     game = True
     while game:
         clock.tick(fps)
+        player_rect = pygame.Rect((player.x, player.y, player.width, player.height))
+        #enemy_rect = pygame.Rect((enemy.x, enemy.y, enemy.width, enemy.height))
+        enemy.updateRect()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -75,8 +81,11 @@ def main(window):
         draw(window, background, bg_image)
         player.movement()
         player.jump()
+        enemy.walk_towards_player(player.x, player.y)
         draw_floor()
-        pygame.draw.rect(window, (255, 255, 255), (player.x, player.y, player.width, player.height))
+
+        pygame.draw.rect(window, (0, 0, 255), (enemy.x, enemy.y, enemy.width, enemy.height))
+        pygame.draw.rect(window, (enemy.enemy_on_hit(player_rect)), player_rect)
 
         pygame.display.flip()
 
