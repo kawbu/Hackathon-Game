@@ -153,9 +153,10 @@ def main(window):
             window.blit(enemy.image, enemy.rect)
             window.blit(enemy2.image, enemy2.rect)
             window.blit(player.weaponImage, player.weaponRect)
+            player.draw_health_bar(window)
             enemy.enemy_on_hit(player.rect, player)
             enemy2.enemy_on_hit(player.rect, player)
-
+        
         pygame.display.flip()
 
     pygame.quit()

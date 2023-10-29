@@ -4,7 +4,8 @@ class Player:
 
     def __init__(self, x = 400, y = 455, width = 40, height = 60, move = 5, jumping = False, distance = 8, jumpCount = 8):
         #Player Details
-        self.health = 2
+        self.max_health = 5
+        self.health = 5
         self.dead = False
         self.x = x
         self.y = y
@@ -38,6 +39,14 @@ class Player:
     
     def get_next_image(self, image_list, current_index):
         return image_list[current_index % len(image_list)]
+    
+
+    def draw_health_bar(self, wind):
+        if self.health < 0:
+            self.health = 0
+        health_bar_width = int((self.health / self.max_health) * self.width)
+        pygame.draw.rect(wind, (255, 0, 0), (self.x, self.y - 20, int((self.health / self.max_health)), 5))
+        pygame.draw.rect(wind, (0, 255, 0), (self.x, self.y - 20, health_bar_width, 5))
     
     # Left and Right movement
     def movement(self):
