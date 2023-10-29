@@ -79,7 +79,7 @@ def main(window):
         player_rect = pygame.Rect((player.x, player.y, player.width, player.height))
         if keys[pygame.K_SPACE]:
             pressed = True
-            bullet = shooting.Bullet(player.x, player.y, player.direction)
+            bullet = shooting.Bullet(player.x, player.y + 30, player.direction)
 
         if pressed:
             pygame.draw.rect(window, (255, 255, 255), (bullet.x, bullet.y, bullet.width, bullet.height))
@@ -104,8 +104,9 @@ def main(window):
         enemy.walk_towards_player(player.x, player.y)
         draw_floor()
 
+        window.blit(player.image, player.rect)
         pygame.draw.rect(window, (0, 0, 255), (enemy.x, enemy.y, enemy.width, enemy.height))
-        pygame.draw.rect(window, (enemy.enemy_on_hit(player_rect)), player_rect)
+        enemy.enemy_on_hit(player.rect)
 
         pygame.display.flip()
 

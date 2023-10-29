@@ -17,6 +17,13 @@ class Enemy:
         self.distance = 9
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
         self.death_sfx = pygame.mixer.Sound("monsterdeath.wav")
+        self.walkRight = [pygame.image.load('assets\playerAnimation\R1_inPixio.png'), pygame.image.load('assets/playerAnimation/R2_inPixio.png'), pygame.image.load('assets/playerAnimation/R3_inPixio.png'),
+             pygame.image.load('assets/playerAnimation/R4_inPixio.png'), pygame.image.load('assets/playerAnimation/R5_inPixio.png'), pygame.image.load('assets/playerAnimation/R6_inPixio.png')]
+
+        self.walkLeft = [pygame.image.load('assets/playerAnimation/L1_inPixio.png'), pygame.image.load('assets/playerAnimation/L2_inPixio.png'), pygame.image.load('assets/playerAnimation/L3_inPixio.png'),
+            pygame.image.load('assets/playerAnimation/L4_inPixio.png'), pygame.image.load('assets/playerAnimation/L5_inPixio.png'), pygame.image.load('assets/playerAnimation/L6_inPixio.png')]
+        self.walkCount = 0
+        self.direction = 0
 
     #Enemy will always move in the direction of the player.
     def walk_towards_player(self, player_x, player_y):
@@ -24,7 +31,12 @@ class Enemy:
             self.x += self.speed
         else:
             self.x -= self.speed
-    
+
+
+    def get_next_image(self, image_list, current_index):
+        return image_list[current_index % len(image_list)]
+
+
     #Updates position of enemy rectangle for collision detection
     def updateRect(self):
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
