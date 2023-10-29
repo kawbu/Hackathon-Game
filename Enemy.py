@@ -16,7 +16,8 @@ class Enemy:
         self.jumpCount = 9
         self.distance = 9
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
-    
+        self.death_sfx = pygame.mixer.Sound("monsterdeath.wav")
+
     #Enemy will always move in the direction of the player.
     def walk_towards_player(self, player_x, player_y):
         if player_x > self.x:
@@ -29,6 +30,7 @@ class Enemy:
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
 
     def respawn(self):
+        self.death_sfx.play()
         respawn_pos = random.choice([1000, -100, 1100, -200])
         self.x = respawn_pos
 

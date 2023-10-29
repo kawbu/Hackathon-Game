@@ -9,25 +9,26 @@ import shooting
 
 pygame.init()
 
+#Background Music and Caption
 pygame.display.set_caption("Test game")
-
 background_sfx = pygame.mixer.Sound("Music.mp3")
+background_sfx.set_volume(0.2)
 background_sfx.play()
 
-#Variables for the game window dimensions
+#Global variables for the game
 screen_w, screen_h = 800, 600
 fps = 60
 velocity = 5
-
 window = pygame.display.set_mode((screen_w, screen_h))
-
 player = Player.Player()
 enemy = Enemy.Enemy()
 playerColor = (255, 255, 255)
 
+#Drawing background
 def draw(self, win):
     win.blit(self.image (self.rect.x, self.rect.y))
 
+#Creating the background
 def set_background(file): 
     #background = (173, 216, 230)
     #ground = (0, 100, 0)

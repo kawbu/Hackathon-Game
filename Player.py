@@ -9,6 +9,8 @@ class Player:
         self.width = width
         self.height = height
         self.move = move
+        self.playSound = 0
+        self.walking = pygame.mixer.Sound("walk.mp3")
 
         # Jumping
         self.jumping = jumping
@@ -23,9 +25,19 @@ class Player:
         if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.x > 0:
             self.x -= self.move
             self.direction = 0
+            if self.playSound % 20 == 0 and (not (keys[pygame.K_UP] or keys[pygame.K_w])):
+                self.walking.play()
+                self.playSound += 1
+            else:
+                self.playSound += 1
         if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.x < 800-self.width:
             self.x += self.move 
             self.direction = 1
+            if self.playSound % 20 == 0 and (not (keys[pygame.K_UP] or keys[pygame.K_w])):
+                self.walking.play()
+                self.playSound += 1
+            else:
+                self.playSound += 1
         
     # Jumping
     def jump(self):
@@ -43,4 +55,3 @@ class Player:
             else:
                 self.jumping = False
                 self.jumpCount = self.distance
-    
