@@ -6,7 +6,6 @@ class Player:
         #Player Details
         self.max_health = 5
         self.health = 5
-        self.dead = False
         self.x = x
         self.y = y
         self.width = width
@@ -37,10 +36,12 @@ class Player:
         self.distance = distance
         self.jumpCount = jumpCount
     
+
+    #Generates next image in animation
     def get_next_image(self, image_list, current_index):
         return image_list[current_index % len(image_list)]
     
-
+    # Display player health bar directly
     def draw_health_bar(self, wind):
         if self.health < 0:
             self.health = 0

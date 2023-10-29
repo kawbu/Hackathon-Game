@@ -36,6 +36,7 @@ class Enemy:
             self.x -= self.speed
 
 
+    #Generates next image in animation
     def get_next_image(self, image_list, current_index):
         return image_list[current_index % len(image_list)]
 

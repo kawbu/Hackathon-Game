@@ -44,15 +44,19 @@ def set_background(file):
     return tiles, image 
 
 
+#Draw background
 def draw(window, background, bg_img):
     for tile in background:
         window.blit(bg_img, tile)
 
 
+#Displays current score (total enemies killed)
 def display_score(enemies_killed):
     tempFont = pygame.font.Font(pygame.font.get_default_font(), 50)
     return tempFont.render(f"Points: {enemies_killed}", False, (0, 0, 0))
 
+titleFont = pygame.font.Font(pygame.font.get_default_font(), 70)
+titleRect = titleFont.render("Skeletal Skirmish", False, (255, 255, 255))
 
 #Draw floor
 floor = pygame.image.load("assets/Tilesets/TX Tileset Ground.png")
@@ -69,17 +73,6 @@ def draw_floor():
     offset = 93
     floor_rect.topleft = (0, 515)
 
-
-def day_night_cycle(index, is_night, current_bg):
-    if is_night:
-        current_bg = pygame.image.load("assets/potentialBG.png")
-        is_night == False
-    else:
-        current_bg = pygame.image.load("assets/nightBG.png")
-        is_night == True
-    return is_night, current_bg
-
-
 #Creating the game
 def main(window):
     isNight = True
@@ -88,6 +81,8 @@ def main(window):
     background, bg_image = set_background("nightBG.png")
     bullet_rect = None
     enemies_killed = 0
+    bgCycle = 0
+    bg_list = [pygame.image.load("assets/potentialBG.png"), pygame.image.load("assets/nightBG.png")]
 
     game = True
     game_started = False
@@ -111,6 +106,7 @@ def main(window):
                         game_started = True
                 window.blit(loading_screen, screen_rect)
                 window.blit(play_button, button_rect)
+                window.blit(titleRect, (100, 200))
         
         if game_started:
             clock.tick(fps)
@@ -123,7 +119,7 @@ def main(window):
                 bullet = shooting.Bullet(player.x, player.y + 30, player.direction)
 
             if pressed:
-                pygame.draw.rect(window, (255, 255, 255), (bullet.x, bullet.y, bullet.width, bullet.height))
+                pygame.draw.rect(window, (155, 149, 149), (bullet.x, bullet.y, bullet.width, bullet.height))
                 if bullet.direction == 1 and bullet.x < 900:
                     bullet.x += bullet.move
                 elif bullet.direction == 0 and bullet.x > -50:
@@ -145,7 +141,7 @@ def main(window):
             enemy.walk_towards_player(player.x, player.y)
             enemy2.walk_towards_player(player.x, player.y)
             draw_floor()
-            isNight, bg_image = day_night_cycle(enemies_killed, isNight, bg_image)
+            #isNight, bg_image = day_night_cycle(enemies_killed, isNight, bg_image)
 
             score = display_score(enemies_killed)
             window.blit(score, score.get_rect())
@@ -156,7 +152,17 @@ def main(window):
             player.draw_health_bar(window)
             enemy.enemy_on_hit(player.rect, player)
             enemy2.enemy_on_hit(player.rect, player)
-        
+
+            # Reset game at 0 health, also cycles between backgrounds.
+            if player.health == 0:
+                bg_image = bg_list[bgCycle % len(bg_list)]
+                bgCycle += 1
+                game_started = False
+                player.health = 5
+                player.x = 400
+                enemy.enemiesKilled = 0
+                enemy2.enemiesKilled = 0
+
         pygame.display.flip()
 
     pygame.quit()
