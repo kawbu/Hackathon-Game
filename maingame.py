@@ -6,6 +6,7 @@ from os.path import isfile, join
 import Player
 import Enemy
 import shooting
+import random
 
 pygame.init()
 
@@ -14,6 +15,7 @@ pygame.display.set_caption("Skeletal Skirmish")
 background_sfx = pygame.mixer.Sound("Music.mp3")
 background_sfx.set_volume(0.2)
 background_sfx.play()
+pygame.font.init()
 
 #Global variables for the game
 screen_w, screen_h = 800, 600
@@ -46,6 +48,11 @@ def draw(window, background, bg_img):
         window.blit(bg_img, tile)
 
 
+def display_score(enemies_killed):
+    tempFont = pygame.font.Font(pygame.font.get_default_font(), 50)
+    return tempFont.render(f"Points: {enemies_killed}", False, (0, 0, 0))
+
+
 #Draw floor
 floor = pygame.image.load("assets/Tilesets/TX Tileset Ground.png")
 floor_rect = floor.get_rect()
@@ -61,11 +68,24 @@ def draw_floor():
     offset = 93
     floor_rect.topleft = (0, 515)
 
+
+def day_night_cycle(index, is_night, current_bg):
+    if index % 2 == 0:
+        if is_night:
+            current_bg = pygame.image.load("assets/potentialBG.png")
+            is_night == False
+        else:
+            current_bg = pygame.image.load("assets/nightBG.png")
+            is_night == True
+    return is_night, current_bg
+
+
 #Creating the game
 def main(window):
+    isNight = True
     pressed = False
     clock = pygame.time.Clock()
-    background, bg_image = set_background("potentialBG.png")
+    background, bg_image = set_background("nightBG.png")
     bullet_rect = None
 
     game = True
@@ -119,7 +139,10 @@ def main(window):
             player.jump()
             enemy.walk_towards_player(player.x, player.y)
             draw_floor()
+            isNight, bg_image = day_night_cycle(enemy.enemiesKilled, isNight, bg_image)
 
+            score = display_score(enemy.enemiesKilled)
+            window.blit(score, score.get_rect())
             window.blit(player.image, player.rect)
             window.blit(enemy.image, enemy.rect)
             window.blit(player.weaponImage, player.weaponRect)

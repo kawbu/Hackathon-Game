@@ -5,6 +5,7 @@ class Enemy:
 
     def __init__(self, x = 200, y = 455, width = 40, height = 60, speed = 3):
         #Enemy Details
+        self.enemiesKilled = 0
         self.x = x
         self.y = y
         self.width = width
@@ -44,7 +45,9 @@ class Enemy:
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
 
     def respawn(self):
+        self.enemiesKilled += 1
         self.death_sfx.play()
+        deathAnimation = pygame.Rect((self.x, self.y, self.width, self.height))
         respawn_pos = random.choice([1000, -100, 1100, -200])
         self.x = respawn_pos
 
