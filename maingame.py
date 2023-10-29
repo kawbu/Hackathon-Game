@@ -10,7 +10,7 @@ import shooting
 pygame.init()
 
 #Background Music and Caption
-pygame.display.set_caption("Test game")
+pygame.display.set_caption("Skeletal Skirmish")
 background_sfx = pygame.mixer.Sound("Music.mp3")
 background_sfx.set_volume(0.2)
 background_sfx.play()
@@ -30,9 +30,6 @@ def draw(self, win):
 
 #Creating the background
 def set_background(file): 
-    #background = (173, 216, 230)
-    #ground = (0, 100, 0)
-    #window.fill(background)
     image = pygame.image.load(join("assets", file))
     x, y, width, height = image.get_rect()
     tiles = []
@@ -72,41 +69,61 @@ def main(window):
     bullet_rect = None
 
     game = True
+    game_started = False
+
+    play_button = pygame.image.load("assets/playButton.png")
+    button_rect = play_button.get_rect()
+    loading_screen = pygame.image.load("assets/titleScreen.jpg")
+    screen_rect = loading_screen.get_rect()
+
+    button_rect.center = (screen_w // 2, screen_h // 2 - 200)
+    screen_rect.center = (screen_w // 2, screen_h // 2 - 150)
+
     while game:
-        clock.tick(fps)
-        draw(window, background, bg_image)
-        keys = pygame.key.get_pressed()
-        player_rect = pygame.Rect((player.x, player.y, player.width, player.height))
-        if keys[pygame.K_SPACE]:
-            pressed = True
-            bullet = shooting.Bullet(player.x, player.y + 30, player.direction)
-
-        if pressed:
-            pygame.draw.rect(window, (255, 255, 255), (bullet.x, bullet.y, bullet.width, bullet.height))
-            if bullet.direction == 1 and bullet.x < 900:
-                bullet.x += bullet.move
-            elif bullet.direction == 0 and bullet.x > -50:
-                bullet.x -= bullet.move
-            bullet_rect = pygame.Rect((bullet.x, bullet.y, bullet.width, bullet.height))
-
-        #enemy_rect = pygame.Rect((enemy.x, enemy.y, enemy.width, enemy.height))
-        enemy.updateRect()
-        if bullet_rect:
-            bullet.y += enemy.enemy_on_bullet(bullet_rect)
-        enemy.jump_on_random()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game = False
+            if not game_started:
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    x, y = event.pos
+                    if button_rect.collidepoint(x, y):
+                        game_started = True
+                window.blit(loading_screen, screen_rect)
+                window.blit(play_button, button_rect)
+        
+        if game_started:
+            clock.tick(fps)
+            draw(window, background, bg_image)
+            
+            keys = pygame.key.get_pressed()
+            player_rect = pygame.Rect((player.x, player.y, player.width, player.height))
+            if keys[pygame.K_SPACE]:
+                pressed = True
+                bullet = shooting.Bullet(player.x, player.y + 30, player.direction)
 
-        player.movement()
-        player.jump()
-        enemy.walk_towards_player(player.x, player.y)
-        draw_floor()
+            if pressed:
+                pygame.draw.rect(window, (255, 255, 255), (bullet.x, bullet.y, bullet.width, bullet.height))
+                if bullet.direction == 1 and bullet.x < 900:
+                    bullet.x += bullet.move
+                elif bullet.direction == 0 and bullet.x > -50:
+                    bullet.x -= bullet.move
+                bullet_rect = pygame.Rect((bullet.x, bullet.y, bullet.width, bullet.height))
 
-        window.blit(player.image, player.rect)
-        pygame.draw.rect(window, (0, 0, 255), (enemy.x, enemy.y, enemy.width, enemy.height))
-        enemy.enemy_on_hit(player.rect)
+            #enemy_rect = pygame.Rect((enemy.x, enemy.y, enemy.width, enemy.height))
+            enemy.updateRect()
+            if bullet_rect:
+                bullet.y += enemy.enemy_on_bullet(bullet_rect)
+            enemy.jump_on_random()
+
+            player.movement()
+            player.jump()
+            enemy.walk_towards_player(player.x, player.y)
+            draw_floor()
+
+            window.blit(player.image, player.rect)
+            window.blit(enemy.image, enemy.rect)
+            window.blit(player.weaponImage, player.weaponRect)
+            enemy.enemy_on_hit(player.rect)
 
         pygame.display.flip()
 

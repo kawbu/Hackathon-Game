@@ -22,6 +22,13 @@ class Player:
         self.walkCount = 0
         self.direction = 0
 
+        #Player Weapon
+        self.weaponAnimations = [pygame.image.load("assets/playerAnimation/playerBowRight.png"), pygame.image.load("assets/playerAnimation/playerBowLeft.png")]
+        self.weaponImage = self.weaponAnimations[0]
+        self.weaponRect = self.weaponImage.get_rect()
+        self.weaponOffset = 20
+        self.weaponRect.topleft = (self.x - self.weaponOffset, self.y)
+
         # Jumping
         self.jumping = jumping
         self.distance = distance
@@ -61,7 +68,9 @@ class Player:
             else:
                 self.image = pygame.image.load('assets/playerAnimation/IdleLeft.png')
         self.rect.topleft = (self.x, self.y)
-        
+        self.weaponRect.topleft = (self.x + self.weaponOffset, self.y) if self.direction == 1 else (self.x - self.weaponOffset, self.y)
+        self.weaponImage = self.weaponAnimations[0] if self.direction == 1 else self.weaponAnimations[1]
+
     # Jumping
     def jump(self):
         keys = pygame.key.get_pressed()
@@ -79,4 +88,5 @@ class Player:
             else:
                 self.jumping = False
                 self.jumpCount = self.distance
-        self.rect.topleft = (self.x, self.y)
+        self.weaponRect.topleft = (self.x + self.weaponOffset, self.y) if self.direction == 1 else (self.x - self.weaponOffset, self.y)
+        

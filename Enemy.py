@@ -2,10 +2,8 @@ import pygame
 import random
 
 class Enemy:
-    health = 1
-    speed = 0
 
-    def __init__(self, x = 200, y = 485, width = 30, height = 30, speed = 3):
+    def __init__(self, x = 200, y = 455, width = 40, height = 60, speed = 3):
         #Enemy Details
         self.x = x
         self.y = y
@@ -16,20 +14,24 @@ class Enemy:
         self.jumpCount = 9
         self.distance = 9
         self.rect = pygame.Rect((self.x, self.y, self.width, self.height))
+        self.image = pygame.image.load('assets/enemyAnimation/tile000_scaled_2x_pngcrushed.png')
         self.death_sfx = pygame.mixer.Sound("monsterdeath.wav")
-        self.walkRight = [pygame.image.load('assets\playerAnimation\R1_inPixio.png'), pygame.image.load('assets/playerAnimation/R2_inPixio.png'), pygame.image.load('assets/playerAnimation/R3_inPixio.png'),
-             pygame.image.load('assets/playerAnimation/R4_inPixio.png'), pygame.image.load('assets/playerAnimation/R5_inPixio.png'), pygame.image.load('assets/playerAnimation/R6_inPixio.png')]
+        self.walkRight = [pygame.image.load('assets/enemyAnimation/tile000_scaled_2x_pngcrushed.png'), pygame.image.load('assets/enemyAnimation/tile001_scaled_2x_pngcrushed.png'), pygame.image.load('assets/enemyAnimation/tile002_scaled_2x_pngcrushed.png'),
+             pygame.image.load('assets/enemyAnimation/tile003_scaled_2x_pngcrushed.png'), pygame.image.load('assets/enemyAnimation/tile004_scaled_2x_pngcrushed.png'), pygame.image.load('assets/enemyAnimation/tile005_scaled_2x_pngcrushed.png')]
 
-        self.walkLeft = [pygame.image.load('assets/playerAnimation/L1_inPixio.png'), pygame.image.load('assets/playerAnimation/L2_inPixio.png'), pygame.image.load('assets/playerAnimation/L3_inPixio.png'),
-            pygame.image.load('assets/playerAnimation/L4_inPixio.png'), pygame.image.load('assets/playerAnimation/L5_inPixio.png'), pygame.image.load('assets/playerAnimation/L6_inPixio.png')]
+        self.walkLeft = [pygame.image.load('assets/enemyAnimation/tile000_scaled_2x_pngcrushedLeft.png'), pygame.image.load('assets/enemyAnimation/tile001_scaled_2x_pngcrushedLeft.png'), pygame.image.load('assets/enemyAnimation/tile002_scaled_2x_pngcrushedLeft.png'),
+             pygame.image.load('assets/enemyAnimation/tile003_scaled_2x_pngcrushedLeft.png'), pygame.image.load('assets/enemyAnimation/tile004_scaled_2x_pngcrushedLeft.png'), pygame.image.load('assets/enemyAnimation/tile005_scaled_2x_pngcrushedLeft.png')]
         self.walkCount = 0
-        self.direction = 0
 
     #Enemy will always move in the direction of the player.
     def walk_towards_player(self, player_x, player_y):
         if player_x > self.x:
             self.x += self.speed
+            self.walkCount += 1
+            self.image = self.get_next_image(self.walkRight, self.walkCount)
         else:
+            self.walkCount += 1
+            self.image = self.get_next_image(self.walkLeft, self.walkCount)
             self.x -= self.speed
 
 
@@ -55,7 +57,7 @@ class Enemy:
         return (255, 255, 255)
     
     def enemy_on_bullet(self, bulletRect):
-        collide = bulletRect.collidepoint(self.rect.topleft)
+        collide = bulletRect.collidepoint(self.rect.topleft) or bulletRect.collidepoint(self.rect.center)
         if collide:
             self.respawn()
             return 1000
