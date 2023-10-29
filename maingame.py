@@ -73,6 +73,7 @@ def main(window):
         player_rect = pygame.Rect((player.x, player.y, player.width, player.height))
         #enemy_rect = pygame.Rect((enemy.x, enemy.y, enemy.width, enemy.height))
         enemy.updateRect()
+        enemy.jump_on_random()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
