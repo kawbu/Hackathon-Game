@@ -24,6 +24,7 @@ velocity = 5
 window = pygame.display.set_mode((screen_w, screen_h))
 player = Player.Player()
 enemy = Enemy.Enemy()
+enemy2 = Enemy.Enemy(x = 800)
 playerColor = (255, 255, 255)
 
 #Drawing background
@@ -70,13 +71,12 @@ def draw_floor():
 
 
 def day_night_cycle(index, is_night, current_bg):
-    if index % 2 == 0:
-        if is_night:
-            current_bg = pygame.image.load("assets/potentialBG.png")
-            is_night == False
-        else:
-            current_bg = pygame.image.load("assets/nightBG.png")
-            is_night == True
+    if is_night:
+        current_bg = pygame.image.load("assets/potentialBG.png")
+        is_night == False
+    else:
+        current_bg = pygame.image.load("assets/nightBG.png")
+        is_night == True
     return is_night, current_bg
 
 
@@ -87,6 +87,7 @@ def main(window):
     clock = pygame.time.Clock()
     background, bg_image = set_background("nightBG.png")
     bullet_rect = None
+    enemies_killed = 0
 
     game = True
     game_started = False
@@ -131,22 +132,29 @@ def main(window):
 
             #enemy_rect = pygame.Rect((enemy.x, enemy.y, enemy.width, enemy.height))
             enemy.updateRect()
+            enemy2.updateRect()
             if bullet_rect:
                 bullet.y += enemy.enemy_on_bullet(bullet_rect)
+                bullet.y += enemy2.enemy_on_bullet(bullet_rect)
             enemy.jump_on_random()
+            enemy2.jump_on_random()
+            enemies_killed = enemy.enemiesKilled + enemy2.enemiesKilled
 
             player.movement()
             player.jump()
             enemy.walk_towards_player(player.x, player.y)
+            enemy2.walk_towards_player(player.x, player.y)
             draw_floor()
-            isNight, bg_image = day_night_cycle(enemy.enemiesKilled, isNight, bg_image)
+            isNight, bg_image = day_night_cycle(enemies_killed, isNight, bg_image)
 
-            score = display_score(enemy.enemiesKilled)
+            score = display_score(enemies_killed)
             window.blit(score, score.get_rect())
             window.blit(player.image, player.rect)
             window.blit(enemy.image, enemy.rect)
+            window.blit(enemy2.image, enemy2.rect)
             window.blit(player.weaponImage, player.weaponRect)
             enemy.enemy_on_hit(player.rect)
+            enemy2.enemy_on_hit(player.rect)
 
         pygame.display.flip()
 
